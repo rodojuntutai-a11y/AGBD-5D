@@ -3,10 +3,26 @@ SELECT FirstName, LastName
 FROM Employees 
 ORDER BY FirstName, LastName;
 
+Execution finished without errors.
+Result: 8 rows returned in 32ms
+At line 1:
+SELECT FirstName, LastName 
+FROM Employees 
+ORDER BY FirstName, LastName;
+
 selecciona las columnas FirstName y LastName de la tabla Employees y 
 muestra los resultados ordenados alfabéticamente primero por el nombre (FirstName) y, 
 en caso de que haya nombres repetidos, por el apellido (LastName)
 --2
+SELECT t.Name, t.Milliseconds
+FROM tracks t
+JOIN albums a ON t.AlbumId = a.AlbumId
+WHERE a.Title = 'Big Ones'
+ORDER BY t.Milliseconds DESC;
+
+Execution finished without errors.
+Result: 15 rows returned in 5ms
+At line 1:
 SELECT t.Name, t.Milliseconds
 FROM tracks t
 JOIN albums a ON t.AlbumId = a.AlbumId
@@ -25,11 +41,30 @@ GROUP BY a.AlbumId, a.Title
 ORDER BY PrecioTotal ASC
 LIMIT 10;
 
+Execution finished without errors.
+Result: 10 rows returned in 11ms
+At line 1:
+SELECT a.Title, SUM(t.UnitPrice) AS PrecioTotal
+FROM albums a
+JOIN tracks t ON a.AlbumId = t.AlbumId
+GROUP BY a.AlbumId, a.Title
+ORDER BY PrecioTotal ASC
+LIMIT 10;
+
 muestra el título de cada álbum y la suma del precio de sus canciones. 
 Para eso une las tablas albums y tracks, agrupa por álbum, calcula el total y 
 luego ordena los resultados de menor a mayor, mostrando solo los 10 primeros.
 
 --4
+SELECT t.Name, g.Name AS Genero, a.Title AS Disco 
+FROM tracks t 
+JOIN genres g ON t.GenreId = g.GenreId 
+JOIN albums a ON t.AlbumId = a.AlbumId 
+WHERE t.UnitPrice = 0.99;
+
+Execution finished without errors.
+Result: 3290 rows returned in 5ms
+At line 1:
 SELECT t.Name, g.Name AS Genero, a.Title AS Disco 
 FROM tracks t 
 JOIN genres g ON t.GenreId = g.GenreId 
@@ -47,6 +82,15 @@ JOIN albums a ON t.AlbumId = a.AlbumId
 JOIN artists ar ON a.ArtistId = ar.ArtistId 
 ORDER BY t.Milliseconds ASC LIMIT 20; 
 
+Execution finished without errors.
+Result: 20 rows returned in 12ms
+At line 1:
+SELECT t.Name, t.Milliseconds, a.Title AS Disco, ar.Name AS Artista 
+FROM tracks t 
+JOIN albums a ON t.AlbumId = a.AlbumId 
+JOIN artists ar ON a.ArtistId = ar.ArtistId 
+ORDER BY t.Milliseconds ASC LIMIT 20;
+
 muestra el nombre de las canciones, su duración, 
 el álbum y el artista al que pertenecen. Para eso une las tablas tracks, 
 albums y artists, y luego ordena las canciones de la más corta a la más larga, 
@@ -60,6 +104,16 @@ JOIN customers c ON e.EmployeeId = c.SupportRepId
 GROUP BY e.EmployeeId, e.LastName, e.Title, j.LastName 
 ORDER BY CantClientes DESC; 
 
+Execution finished without errors.
+Result: 3 rows returned in 4ms
+At line 1:
+SELECT e.LastName AS Empleado, e.Title AS Puesto, j.LastName AS Jefe, 
+COUNT(c.CustomerId) AS CantClientes FROM employees e 
+JOIN employees j ON e.ReportsTo = j.EmployeeId 
+JOIN customers c ON e.EmployeeId = c.SupportRepId 
+GROUP BY e.EmployeeId, e.LastName, e.Title, j.LastName 
+ORDER BY CantClientes DESC;
+
 muestra el apellido del empleado, su puesto, su jefe y la cantidad de clientes que 
 tiene asignados. Para eso une la tabla employees consigo misma para obtener el jefe, 
 y también la tabla customers para contar los clientes por empleado. Luego agrupa los 
@@ -70,6 +124,13 @@ SELECT e.FirstName, e.LastName, c.FirstName, c.LastName
 FROM employees e 
 JOIN customers c ON e.EmployeeId = c.SupportRepId; 
 
+Execution finished without errors.
+Result: 59 rows returned in 4ms
+At line 1:
+SELECT e.FirstName, e.LastName, c.FirstName, c.LastName 
+FROM employees e 
+JOIN customers c ON e.EmployeeId = c.SupportRepId;
+
 muestra el nombre y apellido de los empleados junto con el nombre y 
 apellido de los clientes que tienen asignados. Para eso une la tabla 
 employees con la tabla customers usando el EmployeeId del empleado 
@@ -79,6 +140,13 @@ y el SupportRepId del cliente.
 SELECT c.FirstName, c.LastName, c.Address, i.InvoiceId 
 FROM customers c 
 JOIN invoices i ON c.CustomerId = i.CustomerId; 
+
+Execution finished without errors.
+Result: 412 rows returned in 4ms
+At line 1:
+SELECT c.FirstName, c.LastName, c.Address, i.InvoiceId 
+FROM customers c 
+JOIN invoices i ON c.CustomerId = i.CustomerId;
 
 muestra el nombre, apellido y dirección de los clientes junto con el ID de sus facturas.
 Para eso une la tabla customers con la tabla invoices usando el CustomerId,
@@ -91,11 +159,32 @@ JOIN tracks t ON g.GenreId = t.GenreId
 GROUP BY g.GenreId, g.Name 
 ORDER BY Cantidad DESC; 
 
+Execution finished without errors.
+Result: 25 rows returned in 6ms
+At line 1:
+SELECT g.Name, COUNT(t.TrackId) AS Cantidad 
+FROM genres g 
+JOIN tracks t ON g.GenreId = t.GenreId 
+GROUP BY g.GenreId, g.Name 
+ORDER BY Cantidad DESC;
+
 muestra el nombre de cada género musical y la cantidad de canciones que tiene.
 Para eso une las tablas genres y tracks por el GenreId, cuenta cuántas canciones hay por género,
 agrupa los resultados y los ordena de mayor a menor según la cantidad.
 
 --10
+SELECT c.FirstName, c.LastName, ar.Name AS Artista
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items il ON i.InvoiceId = il.InvoiceId
+JOIN tracks t ON il.TrackId = t.TrackId
+JOIN albums a ON t.AlbumId = a.AlbumId
+JOIN artists ar ON a.ArtistId = ar.ArtistId
+ORDER BY c.LastName;
+
+Execution finished without errors.
+Result: 2240 rows returned in 15ms
+At line 1:
 SELECT c.FirstName, c.LastName, ar.Name AS Artista
 FROM customers c
 JOIN invoices i ON c.CustomerId = i.CustomerId
@@ -117,11 +206,37 @@ JOIN invoice_items il ON i.InvoiceId = il.InvoiceId
 JOIN tracks t ON il.TrackId = t.TrackId
 JOIN genres g ON t.GenreId = g.GenreId;
 
+Execution finished without errors.
+Result: 2240 rows returned in 7ms
+At line 1:
+SELECT c.FirstName, c.City, t.Name AS Cancion, g.Name AS Genero
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items il ON i.InvoiceId = il.InvoiceId
+JOIN tracks t ON il.TrackId = t.TrackId
+JOIN genres g ON t.GenreId = g.GenreId;
+
 muestra el nombre del cliente, su ciudad, la canción que compró y el género de esa canción.
 Para eso une las tablas de clientes, facturas, items de factura, canciones y géneros,
 relacionando cada compra con su información correspondiente.
 
 --12
+SELECT *
+FROM customers c
+JOIN invoices i ON c.CustomerId = i.CustomerId
+JOIN invoice_items ii ON i.InvoiceId = ii.InvoiceId
+JOIN tracks t ON ii.TrackId = t.TrackId
+JOIN albums a ON t.AlbumId = a.AlbumId
+JOIN artists ar ON a.ArtistId = ar.ArtistId
+JOIN genres g ON t.GenreId = g.GenreId
+JOIN employees e ON c.SupportRepId = e.EmployeeId
+JOIN media_types mt ON t.MediaTypeId = mt.MediaTypeId
+JOIN playlist_track pt ON t.TrackId = pt.TrackId
+JOIN playlists p ON pt.PlaylistId = p.PlaylistId;
+
+Execution finished without errors.
+Result: 5572 rows returned in 22ms
+At line 1:
 SELECT *
 FROM customers c
 JOIN invoices i ON c.CustomerId = i.CustomerId
