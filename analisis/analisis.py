@@ -1,4 +1,7 @@
-import pandas as pd
+import pandas as pd 
+import seaborn as sns 
+import matplotlib.pyplot as plt
+
 df=pd.read_csv('latin_music_features_dataset.csv') 
 
 print("OKEY! Archivo cargado correctamente")
@@ -35,3 +38,59 @@ elif suma_cosas > 200:
 else: 
     print ("estado: volumen de mercado bajo o entro del parametro")
     print("no se requiere accion adicional")
+
+# -----------------------------------------
+#grafico1 : grafico de barras (con saborn)
+#------------------------------------------
+print("\n Generando Gafico de Barras")
+
+sns.set_theme(style="whitegrid")
+
+plt.figure(figsize=(9,5))
+
+sns.barplot(
+data=df,
+x= "fragment_index",
+y= "genre",
+estimator=sum,
+errorbar=None,
+palette="Blues_d",
+)
+
+plt.title(
+    "cantidad de generos en la base de datos", fontsize=14
+
+)
+
+plt.xlabel("tipo de hardware", fontsize=11)
+plt.ylabel("total (millones usd)", fontsize=11)
+
+plt.tight_layout()
+plt.savefig("grafico_barras.png", dpi=300)
+plt.close()
+print("grafico de barras guardado exitosamente")
+
+#-------------------------
+# Grafico de Torta
+#-------------------------
+
+print("\n Generando Grafico Torta")
+
+datos_torta=(df.groupby("genre")["fragment_start_sec"]
+             .sum()
+             .nlargest(5)
+)
+plt.figure(figsize=(7,7))
+plt.pie(
+datos_torta.values,
+labels=datos_torta.index,
+autopct="%1.1f%%",
+colors=sns.color_palette("Set2")[0:5],
+startangle=140,
+wedgeprops={"edgecolor":"white","linewidth":2}
+)
+plt.title("Distribucion interna: Tecnologia Avanzada",)
+plt.savefig("grafico_torta.png", dpi=300)
+plt.close()
+print("Grafico de barras guardado exitosamente.")
+
